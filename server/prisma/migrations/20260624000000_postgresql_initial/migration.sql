@@ -1,0 +1,17 @@
+CREATE TYPE "Role" AS ENUM ('user', 'admin');
+CREATE TYPE "PaymentStatus" AS ENUM ('pending', 'paid', 'failed', 'refunded');
+CREATE TABLE "users" ("id" UUID NOT NULL DEFAULT gen_random_uuid(), "email" TEXT NOT NULL, "role" "Role" NOT NULL DEFAULT 'user', "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updated_at" TIMESTAMP(3) NOT NULL, CONSTRAINT "users_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+CREATE TABLE "email_otps" ("id" UUID NOT NULL DEFAULT gen_random_uuid(), "email" TEXT NOT NULL, "otp_hash" TEXT NOT NULL, "expires_at" TIMESTAMP(3) NOT NULL, "used_at" TIMESTAMP(3), "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "user_id" UUID, CONSTRAINT "email_otps_pkey" PRIMARY KEY ("id"));
+CREATE INDEX "email_otps_email_created_at_idx" ON "email_otps"("email", "created_at");
+CREATE TABLE "products" ("id" UUID NOT NULL DEFAULT gen_random_uuid(), "name" TEXT NOT NULL, "slug" TEXT NOT NULL, "family" TEXT NOT NULL, "notes" TEXT[], "accords" TEXT[], "description" TEXT NOT NULL, "price" DECIMAL(10,2) NOT NULL, "size" TEXT NOT NULL DEFAULT '75ml', "stock" INTEGER NOT NULL DEFAULT 0, "image_url" TEXT NOT NULL DEFAULT '', "image_public_id" TEXT, "image_alt" TEXT NOT NULL DEFAULT '', "featured" BOOLEAN NOT NULL DEFAULT false, "love_reasons" TEXT[], "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updated_at" TIMESTAMP(3) NOT NULL, CONSTRAINT "products_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "products_slug_key" ON "products"("slug");
+CREATE TABLE "orders" ("id" UUID NOT NULL DEFAULT gen_random_uuid(), "user_id" UUID NOT NULL, "razorpay_order_id" TEXT NOT NULL, "razorpay_payment_id" TEXT NOT NULL, "payment_status" "PaymentStatus" NOT NULL DEFAULT 'paid', "total_amount" DECIMAL(10,2) NOT NULL, "shipping_details" JSONB NOT NULL, "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updated_at" TIMESTAMP(3) NOT NULL, CONSTRAINT "orders_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "orders_razorpay_order_id_key" ON "orders"("razorpay_order_id");
+CREATE UNIQUE INDEX "orders_razorpay_payment_id_key" ON "orders"("razorpay_payment_id");
+CREATE INDEX "orders_user_id_created_at_idx" ON "orders"("user_id", "created_at");
+CREATE TABLE "order_items" ("id" UUID NOT NULL DEFAULT gen_random_uuid(), "order_id" UUID NOT NULL, "product_id" UUID, "name" TEXT NOT NULL, "quantity" INTEGER NOT NULL, "price" DECIMAL(10,2) NOT NULL, CONSTRAINT "order_items_pkey" PRIMARY KEY ("id"));
+ALTER TABLE "email_otps" ADD CONSTRAINT "email_otps_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "orders" ADD CONSTRAINT "orders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "order_items" ADD CONSTRAINT "order_items_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "order_items" ADD CONSTRAINT "order_items_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE SET NULL ON UPDATE CASCADE;

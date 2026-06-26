@@ -1,0 +1,1 @@
+import { Link } from 'react-router-dom'; export default function NotFound(){return <div className="grid min-h-screen place-items-center px-6 text-center"><div><p className="eyebrow text-gold">404 · Lost note</p><h1 className="display mt-5 text-7xl">This trail has faded.</h1><Link to="/" className="btn-dark mt-8">Return home</Link></div></div>}

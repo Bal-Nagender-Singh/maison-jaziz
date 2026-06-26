@@ -1,0 +1,16 @@
+import { Router } from 'express';
+import asyncHandler from 'express-async-handler';
+import rateLimit from 'express-rate-limit';
+import { adminLogin, logout, me, requestOtp, verifyOtp, updateProfile, listCustomers } from '../controllers/authController.js';
+import { protect, adminOnly } from '../middleware/auth.js';
+const router = Router();
+const otpLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false, message: { message: 'Too many verification requests. Please try again later.' } });
+const adminLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false, message: { message: 'Too many login attempts. Please try again later.' } });
+router.post('/request-otp', otpLimiter, asyncHandler(requestOtp));
+router.post('/verify-otp', otpLimiter, asyncHandler(verifyOtp));
+router.post('/admin-login', adminLimiter, asyncHandler(adminLogin));
+router.get('/me', protect, asyncHandler(me));
+router.post('/logout', asyncHandler(logout));
+router.put('/profile', protect, asyncHandler(updateProfile));
+router.get('/admin/users', protect, adminOnly, asyncHandler(listCustomers));
+export default router;

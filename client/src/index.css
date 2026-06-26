@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color: #130e0d; background: #fbf6e9; font-synthesis: none; }
+html { scroll-behavior: auto; }
+body { margin: 0; min-width: 320px; font-family: Manrope, sans-serif; background: #fbf6e9; }
+body.menu-open { overflow: hidden; }
+::selection { background: #d8c49a; color: #151310; }
+@layer components {
+  .eyebrow { @apply text-[10px] md:text-xs uppercase tracking-luxury font-medium; }
+  .display { @apply font-display font-medium leading-[.92] tracking-[-.025em]; }
+  .btn-dark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px), 0% 10px);
+    border: none;
+    background-color: #c39a43;
+    background-image: linear-gradient(160deg, rgba(255,255,255,0.22) 0%, transparent 52%);
+    box-shadow: 0 2px 12px rgba(195,154,67,0.28);
+    padding: 1rem 1.75rem;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .19em;
+    color: #3d1a1a;
+    transition: all 0.3s ease;
+  }
+  .btn-dark:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 8px 26px rgba(195,154,67,0.42);
+  }
+  .btn-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px), 0% 10px);
+    border: none;
+    background: rgba(195,154,67,0.15);
+    outline: 1px solid rgba(195,154,67,0.5);
+    outline-offset: -1px;
+    box-shadow: 0 2px 8px rgba(195,154,67,0.12);
+    padding: 1rem 1.75rem;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .19em;
+    color: #f5ead6;
+    transition: all 0.3s ease;
+  }
+  .btn-light:hover {
+    transform: translateY(-2px);
+    background-color: #c39a43;
+    color: #3d1a1a;
+    box-shadow: 0 8px 26px rgba(195,154,67,0.36);
+  }
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px), 0% 10px);
+    border: none;
+    background: transparent;
+    outline: 1px solid rgba(195,154,67,0.55);
+    outline-offset: -1px;
+    box-shadow: 0 2px 6px rgba(195,154,67,0.10);
+    padding: 1rem 1.75rem;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .19em;
+    color: #b8975a;
+    transition: all 0.3s ease;
+  }
+  .btn-outline:hover {
+    transform: translateY(-2px);
+    background-color: #3d1a1a;
+    color: #f5ead6;
+    box-shadow: 0 8px 26px rgba(195,154,67,0.24);
+  }
+  .input { @apply w-full border border-antique/45 bg-ivory/70 px-4 py-3 text-sm outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/15; }
+}
+.grain { position: relative; }
+.grain:after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .11; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E"); mix-blend-mode: soft-light; }
+.arabesque { background-image: linear-gradient(30deg, rgba(195,154,67,.07) 12%, transparent 12.5%, transparent 87%, rgba(195,154,67,.07) 87.5%), linear-gradient(150deg, rgba(195,154,67,.07) 12%, transparent 12.5%, transparent 87%, rgba(195,154,67,.07) 87.5%), linear-gradient(30deg, rgba(195,154,67,.07) 12%, transparent 12.5%, transparent 87%, rgba(195,154,67,.07) 87.5%), linear-gradient(150deg, rgba(195,154,67,.07) 12%, transparent 12.5%, transparent 87%, rgba(195,154,67,.07) 87.5%); background-position: 0 0,0 0,24px 42px,24px 42px; background-size:48px 84px; }
+
+/* Islamic Moorish pointed arch – used on product/category images */
+.royal-arch {
+  clip-path: polygon(
+    0% 100%,
+    0% 34%,
+    4% 24%, 10% 15%, 20% 8%, 34% 3%, 50% 0%,
+    66% 3%, 80% 8%, 90% 15%, 96% 24%, 100% 34%,
+    100% 100%
+  );
+}
+
+/* Islamic octagonal frame – used on card outer borders */
+.islamic-frame {
+  clip-path: polygon(0 9%, 9% 0, 91% 0, 100% 9%, 100% 91%, 91% 100%, 9% 100%, 0 91%);
+}
+
+/* Corner ornament stars placed safely inside the octagonal cuts */
+.ornament-corners { position: relative; }
+.ornament-corners:before,.ornament-corners:after { content:'✦'; position:absolute; z-index:3; color:#c39a43; font-size:11px; line-height:1; }
+.ornament-corners:before { left:14px; top:14px; }
+.ornament-corners:after  { bottom:14px; right:14px; }
+
+@keyframes bounceSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-bounce-subtle {
+  animation: bounceSubtle 3s ease-in-out infinite;
+}
+

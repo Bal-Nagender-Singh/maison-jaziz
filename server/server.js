@@ -1,0 +1,35 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import { connectDB } from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import catalogRoutes from './routes/catalogRoutes.js';
+import wishlistRoutes from './routes/wishlistRoutes.js';
+import { errorHandler, notFound } from './middleware/error.js';
+
+const app = express();
+app.set('trust proxy', 1);
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173').split(',').map((origin) => origin.trim());
+app.use(cors({ origin: (origin, callback) => !origin || allowedOrigins.includes(origin) ? callback(null, true) : callback(new Error('Origin not allowed by CORS')), credentials: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(cookieParser());
+app.use(morgan('dev'));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'Masion Jaziz API' }));
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/api/catalog', catalogRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use(notFound);
+app.use(errorHandler);
+
+const port = process.env.PORT || 5000;
+connectDB().then(() => app.listen(port, () => console.log(`API listening on ${port}`))).catch((error) => { console.error('Database connection failed:', error.message); process.exit(1); });
